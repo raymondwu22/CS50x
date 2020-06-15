@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
 
     // Define allowable filters
-    char *filters = "begr";
+    char *filters = "bgrs";
 
     // Get filter flag and check validity
     char filter = getopt(argc, argv, filters);
@@ -105,19 +105,19 @@ int main(int argc, char *argv[])
             blur(height, width, image);
             break;
 
-        // Edges
-        case 'e':
-            edges(height, width, image);
-            break;
-
         // Grayscale
         case 'g':
             grayscale(height, width, image);
             break;
 
-        // Reflect
+        // Reflection
         case 'r':
             reflect(height, width, image);
+            break;
+
+        // Sepia
+        case 's':
+            sepia(height, width, image);
             break;
     }
 
