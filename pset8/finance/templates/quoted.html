@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Quote
+{% endblock %}
+
+{% block main %}
+<table class="table">
+    <thead class="thead-light ">
+        <tr>
+            <th scope="col">Company</th>
+            <th scope="col">Symbol</th>
+            <th scope="col">Latest Price</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tr>
+        <th>{{ stock_data["name"] }}</th>
+        <th>{{ stock_data["symbol"] }}</th>
+        <th>${{ stock_data["price"] }}</th>
+        <th><a href="buy.html">Buy Stock</a></th>
+    </tr>
+</table>
+{% endblock %}
