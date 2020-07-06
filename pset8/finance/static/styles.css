@@ -45,3 +45,11 @@ main img
     /* constrain images on small screens */
     max-width: 100%;
 }
+
+/*invalid_req {*/
+/*    color: red;*/
+/*}*/
+
+/*valid_req {*/
+/*    color: green;*/
+/*}*/

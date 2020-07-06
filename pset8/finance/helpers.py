@@ -1,6 +1,7 @@
 import os
 import requests
 import urllib.parse
+import re
 
 from flask import redirect, render_template, request, session
 from functools import wraps
@@ -61,3 +62,35 @@ def lookup(symbol):
 def usd(value):
     """Format value as USD."""
     return f"${value:,.2f}"
+
+
+def pw_check(password):
+    """Check password requirements"""
+
+    #  x = re.search("\s", txt)
+    # check for lower case
+    if not (re.search("/[a-z]/", password)):
+        print('no lower in password')
+        return False
+
+    # Validating length
+    if (len(password) < 8):
+        print('too short')
+        return False
+
+    # check for upper case
+    if not (re.search("/[A-Z]/", password)):
+        print('no upper in password')
+        return False
+
+    # check for number
+    if not (re.search("/\d+/g", password)):
+        print('no lower in password')
+        return False
+
+    # check for special char
+    if not (re.search("/['!', '?', '#', '$']/", password)):
+        print('no special char in password')
+        return False
+
+    return True

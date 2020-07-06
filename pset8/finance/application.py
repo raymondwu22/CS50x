@@ -8,7 +8,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 import requests
 import datetime
-from helpers import apology, login_required, lookup, usd
+from helpers import apology, login_required, lookup, usd, pw_check
 
 # Configure application
 app = Flask(__name__)
@@ -97,6 +97,7 @@ def buy():
         # if not already in portfolio
         else:
             db.execute("INSERT INTO portfolio(user_id, stock_name, num_shares) VALUES(?, ?, ?)", user_id, symbol, shares)
+        flash('Bought!')
         return redirect("/")
 
 
@@ -126,6 +127,7 @@ def deposit():
         cash = db.execute("SELECT cash FROM users WHERE id=?", user_id)[0]["cash"] + deposit_amount
         db.execute("INSERT INTO transactions (user_id, stock_name, num_shares, action, date, price) VALUES (?, ?, ?, ?, ?, ?)", (user_id, "-", "-", "DEPOSIT", time_stamp, deposit_amount))
         db.execute("UPDATE users SET cash=? WHERE id=?", cash, user_id)
+        flash('Funds were successfully deposited')
         return redirect("/")
 
 @app.route("/history")
@@ -167,6 +169,7 @@ def login():
         session["user_id"] = rows[0]["id"]
 
         # Redirect user to home page
+        flash('You were successfully logged in')
         return redirect("/")
 
     # User reached route via GET (as by clicking a link or via redirect)
@@ -204,7 +207,7 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
-        username_check = db.execute("SELECT username FROM users WHERE username = :username", username)
+        username_check = db.execute("SELECT username FROM users WHERE username = :username", username=username)
 
         # Ensure username was submitted
         if not username:
@@ -225,6 +228,10 @@ def register():
         # Ensure username not already in database
         elif len(username_check) == 1:
             return apology("username already exists", 403)
+
+        # Ensure password validation checks
+        elif not pw_check(password):
+            return apology("Failed password check", 403)
 
         # Ok to insert into database
         else:
@@ -269,7 +276,7 @@ def sell():
             db.execute("DELETE FROM portfolio WHERE stock_name = ? AND user_id = ?", symbol, user_id)
         else:
             db.execute("UPDATE portfolio SET num_shares = num_shares - ? WHERE stock_name = ? AND user_id = ?", num_shares_sold, symbol, user_id)
-
+        flash('Sold!')
         return redirect("/")
 
 @app.route("/update", methods=["GET", "POST"])
@@ -308,7 +315,12 @@ def update():
         elif not (new_password == confirmation):
             return apology("passwords must match!", 403)
 
+        # Ensure password validation checks
+        elif not pw_check(new_password):
+            return apology("Failed password check", 403)
+
         db.execute("UPDATE users SET hash = ? WHERE id = ?", generate_password_hash(new_password), user_id)
+        flash('Password updated')
         return redirect("/")
 
 
