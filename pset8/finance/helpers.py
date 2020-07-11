@@ -66,10 +66,9 @@ def usd(value):
 
 def pw_check(password):
     """Check password requirements"""
-
-    #  x = re.search("\s", txt)
+    print(bool(re.search("[a-z]+", password)), password)
     # check for lower case
-    if not (re.search("/[a-z]/", password)):
+    if not bool(re.search("[a-z]+", password)):
         print('no lower in password')
         return False
 
@@ -79,17 +78,17 @@ def pw_check(password):
         return False
 
     # check for upper case
-    if not (re.search("/[A-Z]/", password)):
+    if not bool(re.search("[A-Z]+", password)):
         print('no upper in password')
         return False
 
     # check for number
-    if not (re.search("/\d+/g", password)):
-        print('no lower in password')
+    if not bool(re.search("[\d]+", password)):
+        print('no digit in password')
         return False
 
     # check for special char
-    if not (re.search("/['!', '?', '#', '$']/", password)):
+    if not bool(re.search("['!', '?', '#', '$']+", password)):
         print('no special char in password')
         return False
 
